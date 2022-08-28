@@ -1,0 +1,86 @@
+version: "3"
+
+services:
+  # -------------------- Calibre --------------------
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+        #- DOCKER_MODS=linuxserver/mods:universal-calibre #optional
+        #- OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+    volumes:
+      - ./calibre-web/data:/config
+      - ./calibre-web/library:/books
+    networks:
+      - calibre
+    restart: unless-stopped
+
+  # -------------------- Fava --------------------
+  fava:
+    image: yegle/fava
+    container_name: fava
+    hostname: fava
+    environment:
+      - BEANCOUNT_FILE=/bean/example.bean
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    networks:
+      - fava
+    volumes:
+      - ./fava/bean:/bean
+
+  # -------------------- Gitea --------------------
+  gitea:
+    image: gitea/gitea:1.16.9
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    networks:
+      - gitea
+    ports:
+      - 3000:3000
+      - 222:22
+    volumes:
+      - ./gitea:/data
+      - ./gitea/app.ini:/etc/gitea/conf/app.ini
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  # -------------------- devdocs --------------------
+  # devdocs:
+  #   build: ./devdocs
+  #   container_name: devdocs
+  #   restart: unless-stopped
+
+  # -------------------- Nginx Gateway --------------------
+  nginx:
+    depends_on:
+      - fava
+      - calibre-web
+      - gitea
+    image: nginx:alpine
+    container_name: nginx-gateway
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    networks:
+      - fava
+      - calibre
+      - gitea
+
+networks:
+  calibre:
+    external: false
+  fava:
+    external: false
+  gitea:
+    external: false
+
