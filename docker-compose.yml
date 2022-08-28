@@ -53,10 +53,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
   # -------------------- devdocs --------------------
-  # devdocs:
-  #   build: ./devdocs
-  #   container_name: devdocs
-  #   restart: unless-stopped
+  devdocs:
+    build: ./devdocs
+    container_name: devdocs
+    restart: unless-stopped
+    networks:
+      - devdocs
+    ports:
+      - 9292:9292
 
   # -------------------- Nginx Gateway --------------------
   nginx:
@@ -64,6 +68,7 @@ services:
       - fava
       - calibre-web
       - gitea
+      - devdocs
     image: nginx:alpine
     container_name: nginx-gateway
     restart: unless-stopped
@@ -75,6 +80,7 @@ services:
       - fava
       - calibre
       - gitea
+      - devdocs
 
 networks:
   calibre:
@@ -82,5 +88,7 @@ networks:
   fava:
     external: false
   gitea:
+    external: false
+  devdocs:
     external: false
 

@@ -4,6 +4,7 @@ self-hosted stuff
 
 # Currently hosting
 - gitea
+- devdocs
 - calibre-web
 - fava
 
