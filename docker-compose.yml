@@ -32,6 +32,7 @@ services:
       - fava
     volumes:
       - ./fava/bean:/bean
+    entrypoint: fava --prefix /beancount
 
   # -------------------- Gitea --------------------
   gitea:
