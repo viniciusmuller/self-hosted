@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vinicius' Space</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <style>
+      a {
+        color: white;
+      }
+
+      form {
+        margin-bottom: 10px;
+      }
+
+      main {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      a {
+        padding: 2px;
+        text-decoration: none;
+      }
+    </style>
+    <main>
+      <h1>Vinicius' Space</h1>
+      <form action="http://192.168.1.132:8080/search" method="post">
+        <input name="q" type="text" name="search" placeholder="..." autocomplete="off" autofocus>
+      </form>
+
+      <div>
+        <div class="link-box">
+          <h2>Self-hosted</h2>
+          <a href="http://192.168.1.132/calibre">calibre</a>
+          <a href="http://192.168.1.132:3000">gitea</a>
+          <a href="http://192.168.1.132:8080">searx</a>
+          <a href="http://192.168.1.132:8081">backlogger</a>
+          <!-- <a href=":8081">beancount</a> -->
+          <a href="http://192.168.1.132:9292">devdocs</a>
+        </div>
+
+        <div class="link-box">
+          <h2>Online</h2>
+          <a href="https://github.com">github</a>
+          <a href="https://gmail.com">gmail</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

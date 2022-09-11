@@ -1,3 +1,9 @@
 [submodule "devdocs"]
 	path = devdocs
 	url = https://github.com/freeCodeCamp/devdocs
+[submodule "searx"]
+	path = searx
+	url = https://github.com/searx/searx.git
+[submodule "backlogger"]
+	path = backlogger
+	url = https://github.com/arcticlimer/backlogger

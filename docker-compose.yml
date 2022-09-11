@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   # -------------------- Calibre --------------------
@@ -26,8 +26,6 @@ services:
     environment:
       - BEANCOUNT_FILE=/bean/example.bean
     restart: unless-stopped
-    ports:
-      - 5000:5000
     networks:
       - fava
     volumes:
@@ -63,6 +61,50 @@ services:
     ports:
       - 9292:9292
 
+  # -------------------- Searx --------------------
+  searx:
+    build: ./searx
+    container_name: searx
+    networks:
+      - searx
+    volumes:
+    - ./searx-data:/etc/searx
+    ports:
+      - 8080:8080
+    environment:
+      - BASE_URL=http://192.168.1.132:8080
+
+  # -------------------- Postgres --------------------
+  postgres:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    networks:
+      - postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg:/var/lib/postgresql/data
+
+  # -------------------- Backlogger --------------------
+  backlogger:
+    build: ./backlogger/backlogger
+    container_name: backlogger
+    restart: unless-stopped
+    networks:
+      - backlogger
+      - postgres
+    ports:
+      - 8081:4000
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=backlogger
+      - PGHOST=postgres
+      - PGPORT=5432
+      - DATABASE_URL=ecto://postgres:postgres@postgres/backlogger
+      - SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
   # -------------------- Nginx Gateway --------------------
   nginx:
     depends_on:
@@ -75,6 +117,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/index.html:/var/www/html/index.html
     ports:
       - 80:80
     networks:
@@ -92,4 +135,13 @@ networks:
     external: false
   devdocs:
     external: false
+  searx:
+    external: false
+  postgres:
+    external: false
+  backlogger:
+    external: false
 
+volumes:
+  pg:
+    driver: local
